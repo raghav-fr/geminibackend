@@ -1,3 +1,4 @@
+import re
 from flask import Flask, request, jsonify
 import google.generativeai as genai
 
@@ -26,7 +27,8 @@ def gemini_handler():
     try:
         chat = get_chat(user_id)
         response = chat.send_message(user_query)
-        return jsonify({"response": response.text})
+        result = re.sub(r"[@#$*]", "", response.text)
+        return jsonify({"response": result})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
